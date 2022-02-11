@@ -10,6 +10,20 @@ import Alamofire
 
 final class NetworkManager {
     
+    func getRequest<T: Decodable>(url: URLConvertible, headers: HTTPHeaders, model: T.Type ,completion:  @escaping ([T])->()){
+        AF.request(url, headers: headers).validate().responseDecodable(of: [T].self) { response in
+            switch response.result {
+            case .success(let posts):
+                
+                completion(posts)
+                
+            case .failure(let error):
+                print(String(describing: error))
+                
+            }
+        }
+    }
+    
     func getRequest<T: Decodable>(url: URLConvertible, headers: HTTPHeaders, model: T.Type ,completion: @escaping (T)->()){
         AF.request(url, headers: headers).validate().responseDecodable(of: [T].self) { response in
             switch response.result {
