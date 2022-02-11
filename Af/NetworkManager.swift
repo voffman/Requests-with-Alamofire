@@ -10,6 +10,13 @@ import Alamofire
 
 final class NetworkManager {
     
+    /*
+   func getRequest(url: URLConvertible, headers: HTTPHeaders){
+        AF.request(url, headers: headers).responseJSON { response in
+            print(response)
+        }
+    } */
+    
     func getRequest<T: Decodable>(url: URLConvertible, headers: HTTPHeaders, model: T.Type ,completion:  @escaping ([T])->()){
         AF.request(url, headers: headers).validate().responseDecodable(of: [T].self) { response in
             switch response.result {
@@ -36,6 +43,17 @@ final class NetworkManager {
             case .failure(let error):
                 print(String(describing: error))
                 
+            }
+        }
+    }
+    
+    func postRequest(url: URLConvertible, headers: HTTPHeaders, body: [String: Any]){
+        AF.request(url, method: .post, parameters: body, encoding:  URLEncoding.queryString, headers: headers).response { response in
+            switch response.result {
+            case .success:
+                print(response.result)
+            case let .failure(error):
+                print(error)
             }
         }
     }
